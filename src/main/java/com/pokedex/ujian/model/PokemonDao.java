@@ -1,6 +1,5 @@
-package com.pokedex.ujian.dao;
+package com.pokedex.ujian.model;
 
-import com.pokedex.ujian.model.Pokemon;
 import java.util.List;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

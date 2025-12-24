@@ -5,7 +5,7 @@
 package com.pokedex.ujian.view;
 
 import com.pokedex.ujian.model.Pokemon;
-import com.pokedex.ujian.service.PokemonService;
+import com.pokedex.ujian.controller.PokemonController;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -35,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class PokedexView extends javax.swing.JFrame {
 
     @Autowired
-    private PokemonService pokemonService;
+    private PokemonController pokemonController;
     
     private final String[] TYPES = {
         "Normal", "Api", "Air", "Rumput", "Listrik", "Es", "Bertarung",
@@ -113,28 +113,6 @@ public class PokedexView extends javax.swing.JFrame {
                 }
             }
         });
-        
-        btnRefresh.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                clearForm();
-                refreshTable();
-            }
-        });
-        
-        btnHapus.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deletePokemon();
-            }
-        });
-        
-        btnUbah.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updatePokemon();
-            }
-        });
     }
 
     private void updateTypeColor(JComboBox<String> comboBox) {
@@ -176,8 +154,8 @@ public class PokedexView extends javax.swing.JFrame {
                     return;
                 }
                 
-                if (pokemonService != null) {
-                    List<String> suggestions = pokemonService.searchPokemonNames(text);
+                if (pokemonController != null) {
+                    List<String> suggestions = pokemonController.searchPokemonNames(text);
                     if (!suggestions.isEmpty()) {
                         popup.removeAll();
                         for (String s : suggestions) {
@@ -202,9 +180,9 @@ public class PokedexView extends javax.swing.JFrame {
     }
 
     public void refreshTable() {
-        if (pokemonService == null) return;
+        if (pokemonController == null) return;
         
-        List<Pokemon> list = pokemonService.getAllPokemon();
+        List<Pokemon> list = pokemonController.getAllPokemon();
         String[] columns = {"ID", "Nama", "Deskripsi", "Type", "Evolusi"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         
@@ -233,7 +211,7 @@ public class PokedexView extends javax.swing.JFrame {
         Long id = (Long) tblPokemon.getValueAt(row, 0);
         
         Pokemon ketemu = null;
-        List<Pokemon> semuaData = pokemonService.getAllPokemon();
+        List<Pokemon> semuaData = pokemonController.getAllPokemon();
         for (Pokemon p : semuaData) {
             if (p.getId().equals(id)) {
                 ketemu = p;
@@ -270,58 +248,58 @@ public class PokedexView extends javax.swing.JFrame {
         updateTypeColor(cbTipe2);
     }
     
-    private void deletePokemon() {
-        int row = tblPokemon.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih data dulu!");
-            return;
-        }
-        
-        Long id = (Long) tblPokemon.getValueAt(row, 0);
-        Pokemon p = new Pokemon(); 
-        p.setId(id);
-        
-        int confirm = JOptionPane.showConfirmDialog(this, "Yakin hapus?");
-        if (confirm == JOptionPane.YES_OPTION) {
-            pokemonService.deletePokemon(p);
-            refreshTable();
-            clearForm();
-        }
-    }
+//    private void deletePokemon() {
+//        int row = tblPokemon.getSelectedRow();
+//        if (row == -1) {
+//            JOptionPane.showMessageDialog(this, "Pilih data dulu!");
+//            return;
+//        }
+//        
+//        Long id = (Long) tblPokemon.getValueAt(row, 0);
+//        Pokemon p = new Pokemon(); 
+//        p.setId(id);
+//        
+//        int confirm = JOptionPane.showConfirmDialog(this, "Yakin hapus?");
+//        if (confirm == JOptionPane.YES_OPTION) {
+//            pokemonController.deletePokemon(p);
+//            refreshTable();
+//            clearForm();
+//        }
+//    }
     
-    private void updatePokemon() {
-        int row = tblPokemon.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih data dulu!");
-            return;
-        }
-        
-        try {
-            Long id = (Long) tblPokemon.getValueAt(row, 0);
-
-            Pokemon p = new Pokemon();
-            p.setId(id);
-            p.setNama(txtNama.getText());
-            p.setDeskripsi(taDeskripsi.getText());
-            p.setTipe1((String) cbTipe1.getSelectedItem());
-
-            String t2 = (String) cbTipe2.getSelectedItem();
-            if (t2.equals("-")) {
-                p.setTipe2(null);
-            } else {
-                p.setTipe2(t2);
-            }
-
-            p.setEvolusi(txtEvolusi.getText());
-
-            pokemonService.updatePokemon(p);
-            JOptionPane.showMessageDialog(this, "Data berhasil diubah!");
-            refreshTable();
-            clearForm();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
-    }
+//    private void updatePokemon() {
+//        int row = tblPokemon.getSelectedRow();
+//        if (row == -1) {
+//            JOptionPane.showMessageDialog(this, "Pilih data dulu!");
+//            return;
+//        }
+//        
+//        try {
+//            Long id = (Long) tblPokemon.getValueAt(row, 0);
+//
+//            Pokemon p = new Pokemon();
+//            p.setId(id);
+//            p.setNama(txtNama.getText());
+//            p.setDeskripsi(taDeskripsi.getText());
+//            p.setTipe1((String) cbTipe1.getSelectedItem());
+//
+//            String t2 = (String) cbTipe2.getSelectedItem();
+//            if (t2.equals("-")) {
+//                p.setTipe2(null);
+//            } else {
+//                p.setTipe2(t2);
+//            }
+//
+//            p.setEvolusi(txtEvolusi.getText());
+//
+//            pokemonController.updatePokemon(p);
+//            JOptionPane.showMessageDialog(this, "Data berhasil diubah!");
+//            refreshTable();
+//            clearForm();
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -372,10 +350,25 @@ public class PokedexView extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblPokemon);
 
         btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
 
         btnHapus.setText("Hapus");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
 
         btnUbah.setText("Ubah");
+        btnUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahActionPerformed(evt);
+            }
+        });
 
         btnTambah.setText("Tambah");
         btnTambah.addActionListener(new java.awt.event.ActionListener() {
@@ -499,7 +492,7 @@ public class PokedexView extends javax.swing.JFrame {
             
             p.setEvolusi(txtEvolusi.getText());
             
-            pokemonService.savePokemon(p);
+            pokemonController.savePokemon(p);
             JOptionPane.showMessageDialog(this, "Berhasil ditambahkan!");
             refreshTable();
             clearForm();
@@ -508,6 +501,65 @@ public class PokedexView extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_btnTambahActionPerformed
+
+    private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
+        // TODO add your handling code here:
+        int row = tblPokemon.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data dulu!");
+            return;
+        }
+        
+        try {
+            Long id = (Long) tblPokemon.getValueAt(row, 0);
+
+            Pokemon p = new Pokemon();
+            p.setId(id);
+            p.setNama(txtNama.getText());
+            p.setDeskripsi(taDeskripsi.getText());
+            p.setTipe1((String) cbTipe1.getSelectedItem());
+
+            String t2 = (String) cbTipe2.getSelectedItem();
+            if (t2.equals("-")) {
+                p.setTipe2(null);
+            } else {
+                p.setTipe2(t2);
+            }
+
+            p.setEvolusi(txtEvolusi.getText());
+
+            pokemonController.updatePokemon(p);
+            JOptionPane.showMessageDialog(this, "Data berhasil diubah!");
+            refreshTable();
+            clearForm();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnUbahActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        refreshTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+        int row = tblPokemon.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data dulu!");
+            return;
+        }
+        
+        Long id = (Long) tblPokemon.getValueAt(row, 0);
+        Pokemon p = new Pokemon(); 
+        p.setId(id);
+        
+        int confirm = JOptionPane.showConfirmDialog(this, "Yakin hapus?");
+        if (confirm == JOptionPane.YES_OPTION) {
+            pokemonController.deletePokemon(p);
+            refreshTable();
+            clearForm();
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
 
     /**
      * @param args the command line arguments

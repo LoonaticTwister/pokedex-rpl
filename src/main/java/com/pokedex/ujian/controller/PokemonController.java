@@ -1,15 +1,15 @@
-package com.pokedex.ujian.service;
+package com.pokedex.ujian.controller;
 
-import com.pokedex.ujian.dao.PokemonDao;
+import com.pokedex.ujian.model.PokemonDao;
 import com.pokedex.ujian.model.Pokemon;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Controller
 @Transactional
-public class PokemonService {
+public class PokemonController {
 
     @Autowired
     private PokemonDao pokemonDao;
