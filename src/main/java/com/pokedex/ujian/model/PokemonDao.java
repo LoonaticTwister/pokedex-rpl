@@ -20,7 +20,10 @@ public class PokemonDao {
     }
 
     public void delete(Pokemon pokemon) {
-        sessionFactory.getCurrentSession().remove(pokemon);
+        Pokemon p = sessionFactory.getCurrentSession().get(Pokemon.class, pokemon.getId());
+        if (p != null) {
+            sessionFactory.getCurrentSession().remove(p);
+        }
     }
 
     public Pokemon findById(Long id) {
